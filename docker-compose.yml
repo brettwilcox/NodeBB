@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 services:
   node:
@@ -7,18 +7,23 @@ services:
     depends_on:
       - db
     expose:
-      - 4567 # use a reverse proxy like Traefik
+      - 80 # use a reverse proxy like Traefik
+    ports:
+      - 80:4567
 
   db:
-    image: mongo:bionic
-    restart: unless-stopped
+    image: postgres:13.1-alpine
+    restart: always
     expose:
-      - 27017
+      - 5432
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: nodebb
     volumes:
       - mongo:/data/db
+    ports:
+      - 5432:5432
 
 volumes:
   mongo:
